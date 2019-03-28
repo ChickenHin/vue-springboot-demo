@@ -5,8 +5,8 @@
       <div class="layer-head"></div>
       <div class="layer-body" v-if="type == 1">
         <form>
-          <label >请输入appkey</label>
-          <input v-model="inputVal" />
+          <label>请输入appkey</label>
+          <textarea v-model="inputVal" placeholder="请输入appkey，可输入多个，用英文逗号隔开"/>
         </form>
         <div class="btns">
           <button class="confirm-btn" @click="confirmAddAppkey()">确&nbsp;&nbsp;认</button>
@@ -14,14 +14,20 @@
         </div>
       </div>
       <div class="layer-body" v-if="type == 2">
-        <form >
-          <label >请输入appkey</label>
-          <input v-model="inputAppkey" />
-          <label >请输入api</label>
-          <input v-model="inputApi" />
-          <label >是否待优化接口</label>
-          <input type="radio" value="1" name="opt" @select="this.isOptApi = true"/>是
-          <input type="radio" value="0" name="opt" @select="this.isOptApi = false"/>否
+        <label>请输入appkey</label>
+        <input v-model="inputAppkey" class="text_input"/>
+        <label>请输入api</label>
+        <input v-model="inputApi" class="text_input"/>
+        <form class="radio_form">
+          <p>是否待优化接口</p>
+          <div class="radio_div">
+            <label class="radio_label">
+              <input type="radio" value="1" name="opt" @select="this.isOptApi = true" class="radio_input"/>是
+            </label>
+            <label class="radio_label">
+              <input type="radio" value="0" name="opt" @select="this.isOptApi = false" class="radio_input"/>否
+            </label>
+          </div>
         </form>
         <div class="btns">
           <button class="confirm-btn" @click="confirmAddApi()">确&nbsp;&nbsp;认</button>
@@ -77,11 +83,11 @@ export default {
 .layer {
   background: #fff;
   border-radius: 4px;
-  width: 400px;
+  width: 480px;
   position: absolute;
   left: 50%;
-  height: 200px;
-  margin-left: -200px;
+  height: 300px;
+  margin-left: -240px;
   z-index: 9999;
 }
 .layer-head {
@@ -96,37 +102,51 @@ export default {
   left: 0;
   width: 100%;
 }
+.radio_form {
+  position: relative;
+}
+.radio_div {
+  position: absolute;
+  top: 0;
+  left: 140px;
+}
 .layer-body {
-  height: 160px;
+  height: 260px;
   overflow: auto;
-  width: 360px;
-  padding: 0 20px;
+  width: 400px;
+  margin: 0 40px;
 }
-form {
-  margin-top: 20px;
-}
-input {
-  width: 230px;
+.text_input {
+  width: 390px;
   height: 30px;
-  border: 1px solid #000000;
-  margin-left: 120px;
-  margin-top: -20px;
+  margin: 10px auto;
 }
 button {
   width: 80px;
   height: 30px;
-  background-color: #42b983;
-  color: #000;
+  background-color: #107957;
   border-radius: 5px;
   cursor: pointer;
   border: none;
+  color: #ffffff;
   font-size: 14px;
 }
 button:hover {
-  background-color: darkgoldenrod;
+  opacity: 0.8;
 }
 .btns {
   margin: 20px auto;
   width: 200px;
+}
+.btns button:nth-child(2) {
+  margin-left: 20px;
+}
+textarea {
+  width: 394px;
+  height: 80px;
+  margin-top: 20px;
+}
+p {
+  margin: 0;
 }
 </style>

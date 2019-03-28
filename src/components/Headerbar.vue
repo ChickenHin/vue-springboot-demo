@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>线上指标监控平台</h1>
+    <h1>指标监控平台</h1>
   </div>
 </template>
 
@@ -13,14 +13,18 @@ export default {
 <style scoped>
 
 div {
-  height: 60px;
-  background-color: #42b983;
+  height: 70px;
+  width: 160px;
+  background-color: #ffffff;
+  opacity: 0.9;
+  margin-top: 40px;
+  border-radius: 0 16px 16px 0;
 }
 
 h1 {
-  line-height: 60px;
-  padding: 0 20px;
-  font-size: 20px;
-  color: #fff;
+  line-height: 70px;
+  padding: 0 30px;
+  font-size: 16px;
+  color: #107957;
 }
 </style>

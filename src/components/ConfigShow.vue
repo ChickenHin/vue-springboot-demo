@@ -1,5 +1,5 @@
 <template>
-  <div class="show">
+  <div class="app_body">
     <select id="service-select" v-model="selectedApartment" @change="selectApartment">
       <option v-for="(service,index) in serviceList" v-bind:key=index>{{service}}</option>
     </select>
@@ -119,11 +119,13 @@ export default {
 </script>
 
 <style scoped>
-.show {
-  margin: 20px 0 0 180px;
-  padding: 20px;
-  border: 1px solid #000;
+.app_body {
+  margin: 40px;
+  padding: 60px;
+  /*border-radius: 0 100px 100px 0;*/
   height: 100%;
+  overflow: auto;
+  background-color: #ffffff;
 }
 h1, h2 {
   font-weight: normal;
@@ -146,7 +148,7 @@ input {
 select {
   width: 100px;
   height: 36px;
-  margin: 20px 20px 0 40px;
+  margin: 20px;
 }
 table {
   border-collapse: collapse;
@@ -166,11 +168,14 @@ td:nth-child(n+1), th:nth-child(n+1) {
 .add-btn {
   width: 100px;
   height: 35px;
-  background-color: #42b983;
+  background-color: #107957;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
   border: none;
   font-size: 14px;
+}
+.add-btn:hover {
+  opacity: 0.8;
 }
 </style>

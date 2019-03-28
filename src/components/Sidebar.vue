@@ -2,10 +2,10 @@
   <div>
     <ul>
       <li>
-        <router-link to="/dataShow">数据展示</router-link>
+        <router-link to="/dataShow">///&nbsp;&nbsp;数据展示</router-link>
       </li>
       <li>
-        <router-link to="/configShow">配置查看</router-link>
+        <router-link to="/configShow">///&nbsp;&nbsp;配置查看</router-link>
       </li>
     </ul>
   </div>
@@ -19,26 +19,28 @@ export default {
 
 <style scoped>
 div {
-  height: 100%;
-  width: 120px;
-  border: 1px solid #000;
+  height: 110px;
+  width: 500px;
   position: absolute;
-  left: 0;
-  top: 60px;
-  margin-top: 20px;
-  padding: 20px;
-  margin-right: 20px;
+  left: 160px;
+  top: 0px;
 }
 ul {
   list-style: none;
-  padding: 0 20px;
 }
 li {
-  margin: 14px auto;
+  color: #fff;
+  height: 110px;
+  width: 140px;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  float: left;
 }
 a {
-  color: #36495d;
+  color: #fff;
   text-decoration: none;
+  line-height: 110px;
+  font-size: 18px;
 }
-
 </style>

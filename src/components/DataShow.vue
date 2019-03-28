@@ -1,18 +1,24 @@
 <template>
   <div class="app_body">
-    <select id="service-select" v-model="selectedApartment" @change="selectApartment">
-      <option v-for="(service,index) in serviceList" v-bind:key=index>{{service}}</option>
-    </select>
-    <select class="time-select" v-model="startTime" >
-      <option v-for="(time,index) in timeList" v-bind:key=index>{{time}}</option>
-    </select>
-    <select class="time-select" v-model="endTime" >
-      <option v-for="(time,index) in timeList" v-bind:key=index>{{time}}</option>
-    </select>
-    <button @click="confirmQuery">查&nbsp;&nbsp;询</button>
+    <div class="choose">
+      <select id="service-select" v-model="selectedApartment" @change="selectApartment">
+        <option v-for="(service,index) in serviceList" v-bind:key=index>{{service}}</option>
+      </select>
+      <select class="time-select" v-model="startTime" >
+        <option v-for="(time,index) in timeList" v-bind:key=index>{{time}}</option>
+      </select>
+      <select class="time-select" v-model="endTime" >
+        <option v-for="(time,index) in timeList" v-bind:key=index>{{time}}</option>
+      </select>
+      <button @click="confirmQuery">查&nbsp;&nbsp;询</button>
+    </div>
     <div id="tp95_chart" ref="tp95_chart" class="chart"></div>
     <div id="tp99_chart" ref="tp99_chart" class="chart"></div>
     <div id="succ_chart" ref="succ_chart" class="chart"></div>
+    <div id="api_tp95_chart" ref="api_tp95_chart" class="chart"></div>
+    <div id="api_tp99_chart" ref="api_tp99_chart" class="chart"></div>
+    <div id="opt_api_tp95_chart" ref="opt_api_tp95_chart" class="chart"></div>
+    <div id="opt_api_tp99_chart" ref="opt_api_tp99_chart" class="chart"></div>
   </div>
 </template>
 
@@ -24,13 +30,21 @@ export default {
       serviceList: [],
       selectedApartment: 0,
       appkeyList: [],
+      apiLists: [],
+      apiLegend: [],
+      optApiLists: [],
+      optApiLegend: [],
       timeList: ['2019-03-17', '2019-03-18', '2019-03-19', '2019-03-20', '2019-03-21', '2019-03-22', '2019-03-23', '2019-03-24', '2019-03-25', '2019-03-26', '2019-03-27', '2019-03-28'],
       startTime: '',
       endTime: '',
       timeOption: [],
       tp95Option: [],
       tp99Option: [],
-      succOption: []
+      succOption: [],
+      apiTp95Option: [],
+      apiTp99Option: [],
+      optApiTp95Option: [],
+      optApiTp99Option: []
     }
   },
   created () {
@@ -44,6 +58,18 @@ export default {
           }
         }).then((a) => {
           this.appkeyList = a.data
+          for (var i = 0, len = this.appkeyList.length; i < len; i++) {
+            var oneAppkeyApiList = this.appkeyList[i]['apiList']
+            console.log(oneAppkeyApiList, 111111)
+            for (var j = 0, len2 = oneAppkeyApiList.length; j < len2; j++) {
+              var apiName = oneAppkeyApiList[j]['api']
+              this.apiLists.push(apiName)
+              var isApiOptFlag = oneAppkeyApiList[j]['opt']
+              if (isApiOptFlag) {
+                this.optApiLists.push(apiName)
+              }
+            }
+          }
         }).catch(function (response) {
           console.log(response)
         })
@@ -59,7 +85,7 @@ export default {
       let myChart = this.$echarts.init(this.$refs.tp95_chart)
       var option = {
         title: {
-          text: 'CRM_TP95'
+          text: 'APPKEY_TP95'
         },
         tooltip: {
           trigger: 'axis'
@@ -94,7 +120,7 @@ export default {
       let myChart = this.$echarts.init(this.$refs.tp99_chart)
       var option = {
         title: {
-          text: 'CRM_TP99'
+          text: 'APPKEY_TP99'
         },
         tooltip: {
           trigger: 'axis'
@@ -130,7 +156,7 @@ export default {
       let myChart = this.$echarts.init(this.$refs.succ_chart)
       var option = {
         title: {
-          text: 'CRM_SUCCESSRATE'
+          text: 'APPKEY_SUCCESSRATE'
         },
         tooltip: {
           trigger: 'axis'
@@ -170,6 +196,152 @@ export default {
 
       myChart.setOption(option, true)
     },
+    drawApiTP95: function () {
+      this.handleLegend()
+      let myChart = this.$echarts.init(this.$refs.api_tp95_chart)
+      var option = {
+        title: {
+          text: 'API_TP95'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.apiLegend
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          top: '40%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.timeOption
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: this.apiTp95Option
+      }
+      myChart.setOption(option, true)
+    },
+    drawApiTP99: function () {
+      this.handleLegend()
+      let myChart = this.$echarts.init(this.$refs.api_tp99_chart)
+      var option = {
+        title: {
+          text: 'API_TP99'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.apiLegend
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          top: '40%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.timeOption
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: this.apiTp99Option
+      }
+      myChart.setOption(option, true)
+    },
+    drawOptApiTP95: function () {
+      let myChart = this.$echarts.init(this.$refs.opt_api_tp95_chart)
+      var option = {
+        title: {
+          text: 'OPT_API_TP95'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.optApiLegend
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          top: '40%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.timeOption
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: this.optApiTp95Option
+      }
+      myChart.setOption(option, true)
+    },
+    drawOptApiTP99: function () {
+      let myChart = this.$echarts.init(this.$refs.opt_api_tp99_chart)
+      var option = {
+        title: {
+          text: 'OPT_API_TP99'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.optApiLegend
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          top: '40%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.timeOption
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: this.optApiTp99Option
+      }
+      myChart.setOption(option, true)
+    },
     selectApartment: function () {
       this.$axios.get('/api/getAppkeyAndApi', {
         params: {
@@ -177,7 +349,19 @@ export default {
         }
       }).then((response) => {
         this.appkeyList = response.data
-        console.log(response.data)
+        this.apiLists = []
+        this.optApiLists = []
+        for (var i = 0, len = this.appkeyList.length; i < len; i++) {
+          var oneAppkeyApiList = this.appkeyList[i]['apiList']
+          for (var j = 0, len2 = oneAppkeyApiList.length; j < len2; j++) {
+            var apiName = oneAppkeyApiList[j]['api']
+            this.apiLists.push(apiName)
+            var isApiOptFlag = oneAppkeyApiList[j]['opt']
+            if (isApiOptFlag) {
+              this.optApiLists.push(apiName)
+            }
+          }
+        }
       }).catch(function (response) {
         console.log(response)
       })
@@ -226,58 +410,152 @@ export default {
       }
       return arr
     },
-    confirmQuery: function () {
-      this.$axios.get('/api/getAppkeyOctoData', {
+    handleLegend: function () {
+      this.apiLegend = this.apiLists
+      this.optApiLegend = this.optApiLists
+      var space = ['', '', '']
+      this.apiLegend = space.concat(this.apiLegend)
+      this.optApiLegend = space.concat(this.optApiLegend)
+    },
+    getAppkeyData: function () {
+      return this.$axios.get('/api/getAppkeyOctoData', {
         params: {
           apartment: this.selectedApartment,
           startTime: this.startTime,
           endTime: this.endTime
         }
-      }).then((response) => {
-        this.timeOption = this.getAllDayInRange(this.startTime, this.endTime)
-        this.tp95Option = []
-        this.tp99Option = []
-        this.succOption = []
-        var allOctoData = response.data
-        var oneAppkeyDataList = []
-        for (var i = 0, len1 = this.appkeyList.length; i < len1; i++) {
-          var appkey = this.appkeyList[i]['appkey']
-          oneAppkeyDataList = allOctoData[appkey]
-
-          var oneAppkeyTP95List = []
-          var oneAppkeyTP99List = []
-          var oneAppkeySuccList = []
-          for (var j = 0, len = oneAppkeyDataList.length; j < len; j++) {
-            oneAppkeyTP95List.push(oneAppkeyDataList[j].tp95)
-            oneAppkeyTP99List.push(oneAppkeyDataList[j].tp99)
-            oneAppkeySuccList.push(oneAppkeyDataList[j].successrate)
-          }
-          var tp95ChartData = {
-            name: appkey,
-            type: 'line',
-            data: oneAppkeyTP95List
-          }
-          var tp99ChartData = {
-            name: appkey,
-            type: 'line',
-            data: oneAppkeyTP99List
-          }
-          var succChartData = {
-            name: appkey,
-            type: 'line',
-            data: oneAppkeySuccList
-          }
-          this.tp95Option.push(tp95ChartData)
-          this.tp99Option.push(tp99ChartData)
-          this.succOption.push(succChartData)
-        }
-        this.drawTP95()
-        this.drawTP99()
-        this.drawSucc()
-        console.log(this.tp95Option, 111111111)
-      }).catch(function (response) {
-        console.log(response)
       })
+    },
+    getApiData: function () {
+      return this.$axios.get('/api/getApiOctoData', {
+        params: {
+          apartment: this.selectedApartment,
+          startTime: this.startTime,
+          endTime: this.endTime
+        }
+      })
+    },
+    getOptApiData: function () {
+      return this.$axios.get('/api/getOptApiOctoData', {
+        params: {
+          apartment: this.selectedApartment,
+          startTime: this.startTime,
+          endTime: this.endTime
+        }
+      })
+    },
+    calAppkeyData: function (response) {
+      this.tp95Option = []
+      this.tp99Option = []
+      this.succOption = []
+      var allOctoData = response.data
+      var oneAppkeyDataList = []
+      for (var i = 0, len1 = this.appkeyList.length; i < len1; i++) {
+        var appkey = this.appkeyList[i]['appkey']
+        oneAppkeyDataList = allOctoData[appkey]
+        var oneAppkeyTP95List = []
+        var oneAppkeyTP99List = []
+        var oneAppkeySuccList = []
+        for (var j = 0, len = oneAppkeyDataList.length; j < len; j++) {
+          oneAppkeyTP95List.push(oneAppkeyDataList[j].tp95)
+          oneAppkeyTP99List.push(oneAppkeyDataList[j].tp99)
+          oneAppkeySuccList.push(oneAppkeyDataList[j].successrate)
+        }
+        var tp95ChartData = {
+          name: appkey,
+          type: 'line',
+          data: oneAppkeyTP95List
+        }
+        var tp99ChartData = {
+          name: appkey,
+          type: 'line',
+          data: oneAppkeyTP99List
+        }
+        var succChartData = {
+          name: appkey,
+          type: 'line',
+          data: oneAppkeySuccList
+        }
+        this.tp95Option.push(tp95ChartData)
+        this.tp99Option.push(tp99ChartData)
+        this.succOption.push(succChartData)
+      }
+      this.drawTP95()
+      this.drawTP99()
+      this.drawSucc()
+    },
+    calApiData: function (response) {
+      this.apiTp95Option = []
+      this.apiTp99Option = []
+      var allOctoData = response.data
+      console.log(allOctoData, 111111)
+      var oneApiDataList = []
+      for (var i = 0, len1 = this.apiLists.length; i < len1; i++) {
+        var api = this.apiLists[i]
+        oneApiDataList = allOctoData[api]
+        var oneApiTP95List = []
+        var oneApiTP99List = []
+        for (var j = 0, len = oneApiDataList.length; j < len; j++) {
+          oneApiTP95List.push(oneApiDataList[j].tp95)
+          oneApiTP99List.push(oneApiDataList[j].tp99)
+        }
+        var apiTp95ChartData = {
+          name: api,
+          type: 'line',
+          data: oneApiTP95List
+        }
+        var apiTp99ChartData = {
+          name: api,
+          type: 'line',
+          data: oneApiTP99List
+        }
+        this.apiTp95Option.push(apiTp95ChartData)
+        this.apiTp99Option.push(apiTp99ChartData)
+      }
+      console.log(this.apiTp95Option)
+      this.drawApiTP95()
+      this.drawApiTP99()
+    },
+    calOptApiData: function (response) {
+      this.optApiTp95Option = []
+      this.optApiTp99Option = []
+      var allOctoData = response.data
+      var oneOptApiDataList = []
+      for (var i = 0, len1 = this.optApiLists.length; i < len1; i++) {
+        var api = this.optApiLists[i]
+        oneOptApiDataList = allOctoData[api]
+        var oneOptApiTP95List = []
+        var oneOptApiTP99List = []
+        for (var j = 0, len = oneOptApiDataList.length; j < len; j++) {
+          oneOptApiTP95List.push(oneOptApiDataList[j].tp95)
+          oneOptApiTP99List.push(oneOptApiDataList[j].tp99)
+        }
+        var optApiTp95ChartData = {
+          name: api,
+          type: 'line',
+          data: oneOptApiTP95List
+        }
+        var optApiTp99ChartData = {
+          name: api,
+          type: 'line',
+          data: oneOptApiTP99List
+        }
+        this.optApiTp95Option.push(optApiTp95ChartData)
+        this.optApiTp99Option.push(optApiTp99ChartData)
+      }
+      this.drawOptApiTP95()
+      this.drawOptApiTP99()
+    },
+    confirmQuery: function () {
+      this.$axios.all([this.getAppkeyData(), this.getApiData(), this.getOptApiData()])
+        .then(this.$axios.spread((response1, response2, response3) => {
+          this.timeOption = this.getAllDayInRange(this.startTime, this.endTime)
+          this.calAppkeyData(response1)
+          this.calApiData(response2)
+          this.calOptApiData(response3)
+        })).catch(function (response) {
+          console.log(response)
+        })
     }
   }
 }
@@ -285,29 +563,39 @@ export default {
 
 <style scoped>
 .app_body {
-  margin: 20px 0 0 180px;
+  margin: 40px;
   padding: 20px;
-  border: 1px solid #000;
+  /*border-radius: 0 100px 100px 0;*/
   height: 100%;
+  background-color: #ffffff;
+  overflow: auto;
 }
 .chart {
-  width: 1100px;
-  height: 500px;
-  margin: 50px 40px;
+  width: 1000px;
+  height: 600px;
+  margin: 50px auto;
 }
 select {
   width: 100px;
   height: 36px;
-  margin: 20px 20px 0 40px;
+  margin: 20px;
 }
 button {
   width: 100px;
   height: 35px;
-  background-color: #42b983;
+  background-color: #107957;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
   border: none;
   font-size: 14px;
+  margin-left: 20px;
+}
+button:hover {
+  opacity: 0.8;
+}
+.choose {
+  width: 800px;
+  margin: 20px auto;
 }
 </style>
