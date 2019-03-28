@@ -26,13 +26,15 @@ div {
   left: 0;
   top: 60px;
   margin-top: 20px;
+  padding: 20px;
+  margin-right: 20px;
 }
 ul {
   list-style: none;
   padding: 0 20px;
 }
 li {
-  margin: 14px 0;
+  margin: 14px auto;
 }
 a {
   color: #36495d;

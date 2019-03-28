@@ -1,17 +1,17 @@
 <template>
   <div class="show">
-    <select id="service-select" @change="selectApartment($event)">
-      <option value="" disabled selected></option>
+    <select id="service-select" v-model="selectedApartment" @change="selectApartment">
       <option v-for="(service,index) in serviceList" v-bind:key=index>{{service}}</option>
     </select>
     <button class="add-btn" @click="addAppkey()">添加appkey</button>
-    <layer :type="1" v-on:confirmAdd="confirmAdd" v-on:cancleAdd="cancleAdd" v-if="layerFlag"></layer>
+    <button class="add-btn" @click="addApi()">添加接口</button>
+    <layer :type="1" v-on:confirmAdd="confirmAddAppkey" v-on:cancleAdd="cancleAddAppkey" v-if="appkeyLayerFlag"></layer>
+    <layer :type="2" v-on:confirmAdd="confirmAddApi" v-on:cancleAdd="cancleAddApi" v-if="apiLayerFlag"></layer>
     <table>
       <thead>
         <tr>
           <th>appkey</th>
           <th>api</th>
-          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -22,9 +22,6 @@
               <span>{{l.api}}</span>
               <span v-if="l.opt">*</span>
             </div>
-          </td>
-          <td>
-            <button class="add-btn">添加接口</button>
           </td>
         </tr>
       </tbody>
@@ -39,9 +36,10 @@ export default {
   data () {
     return {
       serviceList: [],
-      selectedApartment: '请输入',
+      selectedApartment: 0,
       appkeyList: [],
-      layerFlag: false,
+      appkeyLayerFlag: false,
+      apiLayerFlag: false,
       inputVal: ''
     }
   },
@@ -49,24 +47,53 @@ export default {
     this.$axios.get('/api/getApartment')
       .then((response) => {
         this.serviceList = response.data
-        console.log(this.selectedApartment)
+        this.selectedApartment = this.serviceList[0]
+        this.$axios.get('/api/getAppkeyAndApi', {
+          params: {
+            apartment: this.selectedApartment
+          }
+        }).then((response) => {
+          this.appkeyList = response.data
+        }).catch(function (response) {
+          console.log(response)
+        })
       }).catch(function (response) {
         console.log(response)
       })
   },
   methods: {
     addAppkey: function () {
-      this.layerFlag = true
+      this.appkeyLayerFlag = true
     },
-    cancleAdd: function () {
-      this.layerFlag = false
+    cancleAddAppkey: function () {
+      this.appkeyLayerFlag = false
     },
-    confirmAdd: function (val) {
-      this.layerFlag = false
-      this.$axios.post('/api/addAppkey', {
-        apartment: 'CRM',
-        appkeys: val
-      }).then((response) => {
+    confirmAddAppkey: function (val) {
+      this.appkeyLayerFlag = false
+      this.$axios.post('/api/addAppkey', this.qs.stringify({
+        apartment: this.selectedApartment,
+        appkey: val,
+        api: val
+      })).then((response) => {
+        console.log(response.data)
+      }).catch(function (response) {
+        console.log(response)
+      })
+    },
+    addApi: function () {
+      this.apiLayerFlag = true
+    },
+    cancleAddApi: function () {
+      this.apiLayerFlag = false
+    },
+    confirmAddApi: function (data) {
+      this.apiLayerFlag = false
+      this.$axios.post('/api/addApi', this.qs.stringify({
+        apartment: this.selectedApartment,
+        appkey: data['appkey'],
+        api: data['api'],
+        opt: data['opt']
+      })).then((response) => {
         console.log(response.data)
       }).catch(function (response) {
         console.log(response)
@@ -75,11 +102,11 @@ export default {
     selectApartment: function () {
       this.$axios.get('/api/getAppkeyAndApi', {
         params: {
-          apartment: event.target.value
+          apartment: this.selectedApartment
         }
       }).then((response) => {
         this.appkeyList = response.data
-        console.log(response.data)
+        console.log(this.appkeyList)
       }).catch(function (response) {
         console.log(response)
       })
@@ -93,7 +120,7 @@ export default {
 
 <style scoped>
 .show {
-  margin: 20px 0 0 140px;
+  margin: 20px 0 0 180px;
   padding: 20px;
   border: 1px solid #000;
   height: 100%;
@@ -116,23 +143,6 @@ input {
   height: 24px;
   margin-left: 10px;
 }
-.op-btn {
-  width: 30px;
-  height: 30px;
-  color: #42b983;
-  cursor: pointer;
-  border: none;
-  font-size: 24px;
-}
-.cfm-btn {
-  width: 40px;
-  height: 30px;
-  background-color: #42b983;
-  cursor: pointer;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-}
 select {
   width: 100px;
   height: 36px;
@@ -140,7 +150,7 @@ select {
 }
 table {
   border-collapse: collapse;
-  margin: 40px;
+  margin: 40px auto;
   width: 100%;
 }
 table, tr, th, td {
@@ -151,7 +161,7 @@ td,th {
   text-align: center;
 }
 td:nth-child(n+1), th:nth-child(n+1) {
-  width: 70px;
+  /*width: 70px;*/
 }
 .add-btn {
   width: 100px;

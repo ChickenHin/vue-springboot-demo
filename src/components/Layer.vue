@@ -3,13 +3,28 @@
     <div class="shade"></div>
     <div class="layer">
       <div class="layer-head"></div>
-      <div class="layer-body">
+      <div class="layer-body" v-if="type == 1">
         <form>
-          <label v-if="type == 1">请输入appkey</label>
+          <label >请输入appkey</label>
           <input v-model="inputVal" />
         </form>
         <div class="btns">
-          <button class="confirm-btn" @click="confirmAdd()">确&nbsp;&nbsp;认</button>
+          <button class="confirm-btn" @click="confirmAddAppkey()">确&nbsp;&nbsp;认</button>
+          <button class="cancle-btn" @click="cancleAdd()">取&nbsp;&nbsp;消</button>
+        </div>
+      </div>
+      <div class="layer-body" v-if="type == 2">
+        <form >
+          <label >请输入appkey</label>
+          <input v-model="inputAppkey" />
+          <label >请输入api</label>
+          <input v-model="inputApi" />
+          <label >是否待优化接口</label>
+          <input type="radio" value="1" name="opt" @select="this.isOptApi = true"/>是
+          <input type="radio" value="0" name="opt" @select="this.isOptApi = false"/>否
+        </form>
+        <div class="btns">
+          <button class="confirm-btn" @click="confirmAddApi()">确&nbsp;&nbsp;认</button>
           <button class="cancle-btn" @click="cancleAdd()">取&nbsp;&nbsp;消</button>
         </div>
       </div>
@@ -21,7 +36,10 @@
 export default {
   data () {
     return {
-      inputVal: ''
+      inputVal: '',
+      inputAppkey: '',
+      inputApi: '',
+      isOptApi: false
     }
   },
   props: {
@@ -31,11 +49,15 @@ export default {
     this.data = this.type
   },
   methods: {
-    confirmAdd: function () {
+    confirmAddAppkey: function () {
       this.$emit('confirmAdd', this.inputVal)
     },
     cancleAdd: function () {
       this.$emit('cancleAdd')
+    },
+    confirmAddApi: function () {
+      let data = {'appkey': this.inputAppkey, 'api': this.inputApi, 'opt': this.isOptApi}
+      this.$emit('confirmAdd', data)
     }
   }
 }
@@ -56,9 +78,10 @@ export default {
   background: #fff;
   border-radius: 4px;
   width: 400px;
-  position: relative;
+  position: absolute;
+  left: 50%;
   height: 200px;
-  margin: 0 auto;
+  margin-left: -200px;
   z-index: 9999;
 }
 .layer-head {
