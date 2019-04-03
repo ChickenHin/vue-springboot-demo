@@ -11,7 +11,7 @@
       <thead>
         <tr>
           <th>appkey</th>
-          <th>api</th>
+          <th>api(*为待优化接口)</th>
         </tr>
       </thead>
       <tbody>

@@ -7,6 +7,9 @@
       <li>
         <router-link to="/configShow">///&nbsp;&nbsp;配置查看</router-link>
       </li>
+      <li>
+        <router-link to="/pullData">///&nbsp;&nbsp;数据拉取</router-link>
+      </li>
     </ul>
   </div>
 </template>

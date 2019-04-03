@@ -90,9 +90,6 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        legend: {
-          data: this.appkeyList
-        },
         grid: {
           left: '3%',
           right: '4%',
@@ -124,9 +121,6 @@ export default {
         },
         tooltip: {
           trigger: 'axis'
-        },
-        legend: {
-          data: this.appkeyList
         },
         grid: {
           left: '3%',
@@ -160,9 +154,6 @@ export default {
         },
         tooltip: {
           trigger: 'axis'
-        },
-        legend: {
-          data: this.appkeyList
         },
         grid: {
           left: '3%',
@@ -206,14 +197,10 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        legend: {
-          data: this.apiLegend
-        },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          top: '40%',
           containLabel: true
         },
         toolbox: {
@@ -243,14 +230,10 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        legend: {
-          data: this.apiLegend
-        },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          top: '40%',
           containLabel: true
         },
         toolbox: {
@@ -279,14 +262,10 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        legend: {
-          data: this.optApiLegend
-        },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          top: '40%',
           containLabel: true
         },
         toolbox: {
@@ -315,14 +294,10 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        legend: {
-          data: this.optApiLegend
-        },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          top: '40%',
           containLabel: true
         },
         toolbox: {
@@ -571,9 +546,10 @@ export default {
   overflow: auto;
 }
 .chart {
-  width: 1000px;
-  height: 600px;
-  margin: 50px auto;
+  width: 500px;
+  height: 300px;
+  margin: 50px 50px;
+  float: left;
 }
 select {
   width: 100px;
