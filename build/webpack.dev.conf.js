@@ -44,7 +44,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     proxy: {
       '/api': {
-        target: 'http://10.21.51.240:6060',
+        target: 'http://localhost:6060',
         changeOrigin: true,
         secure: false,
       }
